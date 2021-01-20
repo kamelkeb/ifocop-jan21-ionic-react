@@ -10,17 +10,18 @@ import {
     IonTabs,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { imagesOutline, square, triangle } from "ionicons/icons";
+import { imagesOutline, square, analyticsOutline } from "ionicons/icons";
 import Tab1 from "./pages/Tab1";
 import Tab2 from "./pages/Tab2";
 import Tab3 from "./pages/Tab3";
+
 
 const App: React.FC = () => (
     <IonApp>
         <IonReactRouter>
             <IonTabs>
                 <IonRouterOutlet>
-                    <Route path="/tab1" component={Tab1} exact={true} />
+                    <Route path="/reducer" component={Tab1} exact={true} />
                     <Route
                         path="/Photo-Gallery"
                         component={Tab2}
@@ -34,9 +35,9 @@ const App: React.FC = () => (
                     />
                 </IonRouterOutlet>
                 <IonTabBar slot="bottom">
-                    <IonTabButton tab="tab1" href="/tab1">
-                        <IonIcon icon={triangle} />
-                        <IonLabel>Tab 1</IonLabel>
+                    <IonTabButton tab="tab1" href="/reducer">
+                        <IonIcon icon={analyticsOutline} />
+                        <IonLabel>Reducer</IonLabel>
                     </IonTabButton>
                     <IonTabButton tab="Photo Gallery" href="/Photo-Gallery">
                         <IonIcon icon={imagesOutline} />
@@ -53,3 +54,5 @@ const App: React.FC = () => (
 );
 
 export default App;
+
+
