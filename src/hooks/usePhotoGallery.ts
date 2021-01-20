@@ -1,8 +1,9 @@
 import { useCamera } from "@ionic/react-hooks/camera";
 import { useFilesystem, base64FromPath} from "@ionic/react-hooks/filesystem";
 import { useStorage } from "@ionic/react-hooks/storage"
-import { CameraPhoto, CameraResultType, CameraSource, FilesystemDirectory } from "@capacitor/core";
+import { CameraPhoto, CameraResultType, Capacitor , CameraSource, FilesystemDirectory } from "@capacitor/core";
 import React, { useState, useEffect } from "react";
+import { isPlatform } from '@ionic/react';
 
 export interface Photo {
     filepath:string;
@@ -30,27 +31,49 @@ export const usePhotoGallery = () => {
         // Ici mettre les appels qui renvoient des Promises
           const photosString = await get(PHOTO_STORAGE)
           const localPhotos = photosString ? JSON.parse(photosString) : [];
-          for (let photo of localPhotos){
-              const file = await  readFile({
-                  path: photo.filepath,
-                  directory: FilesystemDirectory.Data
-              });
-              photo.webviewPath = `data:image/jpeg;base64,${file.data}`
+          if (!isPlatform('hybrid')) {
+            for (let photo of localPhotos){
+                 const file = await  readFile({
+                 path: photo.filepath,
+                 directory: FilesystemDirectory.Data
+            });
+              photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
+            }
           }
           setPhotos(localPhotos);}
           loadLocalPhotos();
     }, [get, readFile])
 
     const savePicture = async (photo: CameraPhoto, fileName: string) =>{
-        const base64Data = await base64FromPath(photo.webPath!)
+        let base64Data: string;
+        if(isPlatform('hybrid')){
+            const file = await readFile({
+                path: photo.path!
+              });
+              base64Data = file.data;
+
+        } else {
+            base64Data = await base64FromPath(photo.webPath!);
+        }
+
         const savedFile = await writeFile({
             path: fileName,
             data: base64Data,
             directory: FilesystemDirectory.Data
-        })
-        return { filepath: fileName, webviewPath: photo.webPath}
-
-    }
+        });
+        if (isPlatform('hybrid')) {
+            return {
+              filepath: savedFile.uri,
+              webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+            };
+          }
+          else {
+            return {
+              filepath: fileName,
+              webviewPath: photo.webPath
+            };
+          }
+        };
 
     const takePhoto = async () => {
         const fileName = new Date().getTime() + ".jpeg";
