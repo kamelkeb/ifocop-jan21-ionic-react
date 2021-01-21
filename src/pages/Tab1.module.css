@@ -1,0 +1,5 @@
+.toast {
+  --border-radius: 30px;
+  --color: var(--ion-color-warning);
+  --width: 65%;
+}

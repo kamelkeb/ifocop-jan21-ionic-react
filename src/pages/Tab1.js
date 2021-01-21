@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IonButton,
   IonContent,
@@ -8,18 +8,27 @@ import {
   IonTitle,
   IonToolbar,
   IonActionSheet,
+  IonToast,
 } from "@ionic/react";
 
-import "./Tab1.css";
 import { useSoldeFeature } from "../features/gestionSolde";
-import { TextInput } from "../components/TextInput";
+import { PosNumInput } from "../components/PosNumInput";
+import classes from "./Tab1.module.css";
 
 const Tab1 = () => {
   const { userData, déposerDesSous, retirerDesSous } = useSoldeFeature();
   const [montant, setMontant] = useState(0);
+  const [showToast, setShowToast] = useState(false);
+  const [isDepot, setIsDepot] = useState();
 
-  const dépotHandler = () => déposerDesSous(montant);
-  const retraitHandler = () => retirerDesSous(montant);
+  const dépotHandler = () => {
+    setIsDepot(true);
+    setShowToast(true);
+  };
+  const retraitHandler = () => {
+    setIsDepot(false);
+    setShowToast(true);
+  };
   return (
     <IonPage>
       <IonHeader>
@@ -36,14 +45,44 @@ const Tab1 = () => {
           {userData.nombreEntréeAdécouvert} fois en découvert.
         </IonText>
 
-        <TextInput
+        <PosNumInput
           value={montant}
           onChange={setMontant}
           title="Montant"
-        ></TextInput>
+        ></PosNumInput>
         <IonButton onClick={dépotHandler}>Ajouter</IonButton>
         <IonButton onClick={retraitHandler}>Retirer</IonButton>
       </IonContent>
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={`Votre nouveau solde sera de: ${
+          userData.solde + (isDepot ? montant : -montant)
+        }, voulez vous procédez?`}
+        position="middle"
+        animated={true}
+        cssClass={classes.toast}
+        buttons={[
+          {
+            side: "start",
+            role: "cancel",
+            text: "Annuler",
+            handler: () => {
+              setShowToast(false);
+              setMontant(0);
+            },
+          },
+          {
+            text: "Oui",
+
+            handler: () => {
+              setShowToast(false);
+              isDepot ? déposerDesSous(montant) : retirerDesSous(montant);
+              setMontant(0);
+            },
+          },
+        ]}
+      />
     </IonPage>
   );
 };
