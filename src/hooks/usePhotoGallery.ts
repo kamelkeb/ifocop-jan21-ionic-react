@@ -100,5 +100,25 @@ export const usePhotoGallery = () => {
     set(PHOTO_STORAGE, JSON.stringify([...photos, newPhoto]));
   };
 
-  return { takePhoto: takePhoto, photos: photos };
+  const deletePhoto = async (photo: Photo) => {
+    // Remove this photo from the Photos reference data array
+    const newPhotos = photos.filter((p) => p.filepath !== photo.filepath);
+
+    // Update photos array cache by overwriting the existing photo array
+    set(PHOTO_STORAGE, JSON.stringify(newPhotos));
+
+    // delete photo file from filesystem
+    const filename = photo.filepath.substr(photo.filepath.lastIndexOf("/") + 1);
+    await deleteFile({
+      path: filename,
+      directory: FilesystemDirectory.Data,
+    });
+    setPhotos(newPhotos);
+  };
+
+  return {
+    takePhoto,
+    photos,
+    deletePhoto,
+  };
 };
