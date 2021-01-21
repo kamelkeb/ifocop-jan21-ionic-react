@@ -3,9 +3,10 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';
 import { BasicForm } from '../components/BasicForm';
+import { useUserFeatures } from "../features/currentUser";
 
 const Tab3: React.FC = () => {
-
+  const { signInWithEmailAndPassword, currentUserData } = useUserFeatures();
 
 
 
@@ -17,7 +18,8 @@ const Tab3: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <BasicForm></BasicForm>
+        <IonTitle>{currentUserData.isLogedin ? `${currentUserData.email} est bien connecté!` : 'Pas encore connecté!'}</IonTitle>
+        <BasicForm signInHandler={signInWithEmailAndPassword}></BasicForm>
       </IonContent>
     </IonPage>
   );

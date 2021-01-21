@@ -11,7 +11,7 @@ import {
   IonTitle,
 } from "@ionic/react";
 
-export const BasicForm = () => {
+export const BasicForm = ({ signInHandler }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,7 +19,7 @@ export const BasicForm = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        console.log(email, password);
+        signInHandler({ email, password });
       }}
     >
       <IonGrid fixed>
