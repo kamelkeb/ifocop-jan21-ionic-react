@@ -1,18 +1,25 @@
-import React, { useReducer } from 'react';
-import { IonButton, IonContent, IonHeader, IonPage, IonText, IonTitle, IonToolbar, IonActionSheet } from '@ionic/react';
+import React, { useState } from "react";
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  IonActionSheet,
+} from "@ionic/react";
 
-import './Tab1.css';
-import { useSoldeFeature } from '../features/gestionSolde';
-
-
-
-
+import "./Tab1.css";
+import { useSoldeFeature } from "../features/gestionSolde";
+import { TextInput } from "../components/TextInput";
 
 const Tab1 = () => {
   const { userData, déposerDesSous, retirerDesSous } = useSoldeFeature();
+  const [montant, setMontant] = useState(0);
 
-  const dépotHandler = () => déposerDesSous(100);
-  const retraitHandler = () => retirerDesSous(100);
+  const dépotHandler = () => déposerDesSous(montant);
+  const retraitHandler = () => retirerDesSous(montant);
   return (
     <IonPage>
       <IonHeader>
@@ -21,11 +28,21 @@ const Tab1 = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonText>Bonjour {userData.nom}, votre solde est de {userData.solde}</IonText>
-        <IonText>Depuis que vous êtes chez nous, vous êtes entré {userData.nombreEntréeAdécouvert} fois en découvert.</IonText>
-        <IonButton onClick={dépotHandler}>Ajouter 100</IonButton>
-        <IonButton onClick={retraitHandler}>Retirer 100</IonButton>
+        <IonText>
+          Bonjour {userData.nom}, votre solde est de {userData.solde}
+        </IonText>
+        <IonText>
+          Depuis que vous êtes chez nous, vous êtes entré{" "}
+          {userData.nombreEntréeAdécouvert} fois en découvert.
+        </IonText>
 
+        <TextInput
+          value={montant}
+          onChange={setMontant}
+          title="Montant"
+        ></TextInput>
+        <IonButton onClick={dépotHandler}>Ajouter</IonButton>
+        <IonButton onClick={retraitHandler}>Retirer</IonButton>
       </IonContent>
     </IonPage>
   );
