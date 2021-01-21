@@ -57,7 +57,7 @@ const Tab1 = () => {
         isOpen={showToast}
         onDidDismiss={() => setShowToast(false)}
         message={`Votre nouveau solde sera de: ${
-          userData.solde + (isDepot ? montant : -montant)
+          userData.solde + (isDepot ? Number(montant) : -Number(montant))
         }, voulez vous procédez?`}
         position="middle"
         animated={true}
