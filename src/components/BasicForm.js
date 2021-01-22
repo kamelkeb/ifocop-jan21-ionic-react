@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   IonContent,
   IonLabel,
   IonInput,
   IonItem,
   IonButton,
+  IonText,
   IonGrid,
   IonRow,
   IonCol,
   IonTitle,
 } from "@ionic/react";
+import { Context as UserContext } from "../features/currentUser";
 
 export const BasicForm = ({ signInHandler }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { sendResetPasswordEmail } = useContext(UserContext);
 
   return (
     <form
@@ -48,6 +51,13 @@ export const BasicForm = ({ signInHandler }) => {
                 type="password"
               ></IonInput>
             </IonItem>
+            <IonText
+              color="primary"
+              style={{ fontSize: "0.6em", cursor: "pointer" }}
+              onClick={() => sendResetPasswordEmail(email)}
+            >
+              Mot de passe oubliée?
+            </IonText>
           </IonCol>
         </IonRow>
         <IonRow style={{ width: "100%" }}>

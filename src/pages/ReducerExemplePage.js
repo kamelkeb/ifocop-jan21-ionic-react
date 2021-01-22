@@ -15,7 +15,7 @@ import { useSoldeFeature } from "../features/gestionSolde";
 import { PosNumInput } from "../components/PosNumInput";
 import classes from "./Tab1.module.css";
 
-const Tab1 = () => {
+const ReducerExemplePage = () => {
   const { userData, déposerDesSous, retirerDesSous } = useSoldeFeature();
   const [montant, setMontant] = useState(0);
   const [showToast, setShowToast] = useState(false);
@@ -87,4 +87,4 @@ const Tab1 = () => {
   );
 };
 
-export default Tab1;
+export default ReducerExemplePage;

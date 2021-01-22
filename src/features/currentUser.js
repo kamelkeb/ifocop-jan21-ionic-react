@@ -1,6 +1,6 @@
 import { auth } from "../firebase";
 
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 
 const REQUEST_STATUS = {
   IDLE: "idle",
@@ -19,6 +19,8 @@ const initialState = {
 const ACTION_TYPES = {
   SIGN_IN: "signIn",
   SIGN_OUT: "signOut",
+  LOCAL_SIGN_IN: "localSignIn",
+  LOCAL_SIGN_OUT: "localSignOut",
 };
 
 const currentUserReducer = (state, action) => {
@@ -29,8 +31,21 @@ const currentUserReducer = (state, action) => {
         email: action.payload.email,
         id: action.payload.id,
         isLogedin: true,
+        signInStatus: REQUEST_STATUS.SUCCESS,
+        signInErrorMessage: null,
       };
     case ACTION_TYPES.SIGN_OUT:
+      return {
+        ...initialState,
+      };
+    case ACTION_TYPES.LOCAL_SIGN_IN:
+      return {
+        ...state,
+        email: action.payload.email,
+        id: action.payload.id,
+        isLogedin: true,
+      };
+    case ACTION_TYPES.LOCAL_SIGN_OUT:
       return {
         ...initialState,
       };
@@ -47,6 +62,23 @@ export const useUserFeatures = () => {
     initialState
   );
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (Boolean(user)) {
+        // Cas déjà loggé
+        dispatch({
+          type: ACTION_TYPES.LOCAL_SIGN_IN,
+          payload: { email: user.email, id: user.uid },
+        });
+      } else {
+        // Cas pas loggé
+        dispatch({ type: ACTION_TYPES.LOCAL_SIGN_OUT });
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   const signInWithEmailAndPassword = async ({ email, password }) => {
     // Faire ce qu'il faut pour demander le sign in à auth
     // et récupérer l'id
@@ -59,13 +91,23 @@ export const useUserFeatures = () => {
 
   const signout = async () => {
     const response = await auth.signOut();
+
     dispatch({ type: ACTION_TYPES.SIGN_OUT });
+  };
+
+  const sendResetPasswordEmail = (email) => {
+    auth.sendPasswordResetEmail(email);
   };
 
   const Provider = (props) => {
     return (
       <Context.Provider
-        value={{ currentUserData, signInWithEmailAndPassword, signout }}
+        value={{
+          currentUserData,
+          signInWithEmailAndPassword,
+          signout,
+          sendResetPasswordEmail,
+        }}
         {...props}
       ></Context.Provider>
     );

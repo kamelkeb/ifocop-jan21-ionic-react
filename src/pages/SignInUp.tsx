@@ -5,6 +5,7 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -14,7 +15,7 @@ import { BasicForm } from "../components/BasicForm";
 import { Context as UserContext } from "../features/currentUser";
 import { logOutOutline } from "ionicons/icons";
 
-const Tab3: React.FC = () => {
+const SignInUp: React.FC = () => {
   const { currentUserData, signInWithEmailAndPassword, signout } = useContext(
     UserContext
   );
@@ -29,16 +30,23 @@ const Tab3: React.FC = () => {
           </IonButton>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonTitle>
-          {currentUserData.isLogedin
-            ? `${currentUserData.email} est bien connecté! L'id utilisateur est ${currentUserData.id}`
-            : "Pas encore connecté!"}
-        </IonTitle>
-        <BasicForm signInHandler={signInWithEmailAndPassword}></BasicForm>
-      </IonContent>
+      {currentUserData.isLogedin ? (
+        <IonContent fullscreen>
+          <IonTitle>
+            {`${currentUserData.email} est bien connecté! L'id utilisateur est ${currentUserData.id}`}
+          </IonTitle>
+          <IonText>LUI AFFICHER DES INFOS DE PROFIL AU BESOIN</IonText>{" "}
+        </IonContent>
+      ) : (
+        <IonContent fullscreen>
+          <IonTitle>
+            <h3>Veuillez vous connecter s'il vous plait</h3>
+          </IonTitle>
+          <BasicForm signInHandler={signInWithEmailAndPassword}></BasicForm>
+        </IonContent>
+      )}
     </IonPage>
   );
 };
 
-export default Tab3;
+export default SignInUp;

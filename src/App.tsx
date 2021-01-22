@@ -11,10 +11,11 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { imagesOutline, person, analyticsOutline } from "ionicons/icons";
-import Tab1 from "./pages/Tab1";
-import Tab2 from "./pages/Tab2";
-import Tab3 from "./pages/Tab3";
+import ReducerExemplePage from "./pages/ReducerExemplePage";
+import PhotoGalleryPage from "./pages/PhotoGalleryPage";
+import SignInUp from "./pages/SignInUp";
 import { useUserFeatures } from "./features/currentUser";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const App: React.FC = () => {
   const { Provider } = useUserFeatures();
@@ -24,17 +25,25 @@ const App: React.FC = () => {
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/reducer" component={Tab1} exact={true} />
-              <Route path="/Photo-Gallery" component={Tab2} exact={true} />
-              <Route path="/tab3" component={Tab3} />
+              <ProtectedRoute
+                path="/reducer"
+                component={ReducerExemplePage}
+                exact={true}
+              />
+              <ProtectedRoute
+                path="/Photo-Gallery"
+                component={PhotoGalleryPage}
+                exact={true}
+              />
+              <Route path="/signinup" component={SignInUp} />
               <Route
                 path="/"
-                render={() => <Redirect to="/tab1" />}
+                render={() => <Redirect to="/signinup" />}
                 exact={true}
               />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-              <IonTabButton tab="tab1" href="/reducer">
+              <IonTabButton tab="reducer" href="/reducer">
                 <IonIcon icon={analyticsOutline} />
                 <IonLabel>Reducer</IonLabel>
               </IonTabButton>
@@ -42,7 +51,7 @@ const App: React.FC = () => {
                 <IonIcon icon={imagesOutline} />
                 <IonLabel>Photo Gallery</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="tab3" href="/tab3">
+              <IonTabButton tab="signinup" href="/signinup">
                 <IonIcon icon={person} />
                 <IonLabel>Sign in or sign up</IonLabel>
               </IonTabButton>
