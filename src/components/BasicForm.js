@@ -10,6 +10,8 @@ import {
   IonRow,
   IonCol,
   IonTitle,
+  IonAlert,
+  IonToast,
 } from "@ionic/react";
 import { Context as UserContext } from "../features/currentUser";
 
@@ -18,6 +20,19 @@ export const BasicForm = ({ signInHandler }) => {
   const [password, setPassword] = useState("");
   const { sendResetPasswordEmail } = useContext(UserContext);
 
+  const [showResetPasswordAlert, setShowResetPasswordAlert] = useState(false);
+  const [
+    showResetEmailDoneGreetings,
+    setShowResetEmailDoneGreetings,
+  ] = useState(false);
+
+  const doSendResetEmail = (email) => {
+    sendResetPasswordEmail(email);
+  };
+
+  const resetClickedHandler = () => {
+    setShowResetPasswordAlert(true);
+  };
   return (
     <form
       onSubmit={(e) => {
@@ -54,7 +69,7 @@ export const BasicForm = ({ signInHandler }) => {
             <IonText
               color="primary"
               style={{ fontSize: "0.6em", cursor: "pointer" }}
-              onClick={() => sendResetPasswordEmail(email)}
+              onClick={resetClickedHandler}
             >
               Mot de passe oubliée?
             </IonText>
@@ -69,6 +84,42 @@ export const BasicForm = ({ signInHandler }) => {
         </IonRow>
       </IonGrid>
       <button type="submit"></button>
+      <IonAlert
+        isOpen={showResetPasswordAlert}
+        onDidDismiss={() => setShowResetPasswordAlert(false)}
+        header="Mot de passe oublié:"
+        message="Veuillez aussi vérifier votre dossier spam pour retrouver l'email."
+        inputs={[
+          {
+            name: "email",
+            type: "email",
+            value: email,
+            placeholder: "Adresse email",
+          },
+        ]}
+        buttons={[
+          {
+            text: "Annuler",
+            role: "cancel",
+            cssClass: "secondary",
+          },
+          {
+            text: "Envoyer",
+            handler: (data) => {
+              setEmail(data.email);
+              doSendResetEmail(data.email);
+              setShowResetEmailDoneGreetings(true);
+            },
+          },
+        ]}
+      />
+      <IonToast
+        isOpen={showResetEmailDoneGreetings}
+        onDidDismiss={() => setShowResetEmailDoneGreetings(false)}
+        position="middle"
+        message="Un message avec les instructions de réinitialisation a bien été envoyé!"
+        duration={1200}
+      />
     </form>
   );
 };
