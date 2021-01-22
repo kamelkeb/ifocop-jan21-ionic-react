@@ -1,58 +1,57 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
-    IonApp,
-    IonIcon,
-    IonLabel,
-    IonRouterOutlet,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
+  IonApp,
+  IonIcon,
+  IonLabel,
+  IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { imagesOutline, person, analyticsOutline } from "ionicons/icons";
 import Tab1 from "./pages/Tab1";
 import Tab2 from "./pages/Tab2";
 import Tab3 from "./pages/Tab3";
+import { useUserFeatures } from "./features/currentUser";
 
-
-const App: React.FC = () => (
+const App: React.FC = () => {
+  const { Provider } = useUserFeatures();
+  return (
     <IonApp>
+      <Provider>
         <IonReactRouter>
-            <IonTabs>
-                <IonRouterOutlet>
-                    <Route path="/reducer" component={Tab1} exact={true} />
-                    <Route
-                        path="/Photo-Gallery"
-                        component={Tab2}
-                        exact={true}
-                    />
-                    <Route path="/tab3" component={Tab3} />
-                    <Route
-                        path="/"
-                        render={() => <Redirect to="/tab1" />}
-                        exact={true}
-                    />
-                </IonRouterOutlet>
-                <IonTabBar slot="bottom">
-                    <IonTabButton tab="tab1" href="/reducer">
-                        <IonIcon icon={analyticsOutline} />
-                        <IonLabel>Reducer</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="Photo Gallery" href="/Photo-Gallery">
-                        <IonIcon icon={imagesOutline} />
-                        <IonLabel>Photo Gallery</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="tab3" href="/tab3">
-                        <IonIcon icon={person} />
-                        <IonLabel>Sign in or sign up</IonLabel>
-                    </IonTabButton>
-                </IonTabBar>
-            </IonTabs>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route path="/reducer" component={Tab1} exact={true} />
+              <Route path="/Photo-Gallery" component={Tab2} exact={true} />
+              <Route path="/tab3" component={Tab3} />
+              <Route
+                path="/"
+                render={() => <Redirect to="/tab1" />}
+                exact={true}
+              />
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="tab1" href="/reducer">
+                <IonIcon icon={analyticsOutline} />
+                <IonLabel>Reducer</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="Photo Gallery" href="/Photo-Gallery">
+                <IonIcon icon={imagesOutline} />
+                <IonLabel>Photo Gallery</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="tab3" href="/tab3">
+                <IonIcon icon={person} />
+                <IonLabel>Sign in or sign up</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
         </IonReactRouter>
+      </Provider>
     </IonApp>
-);
+  );
+};
 
 export default App;
-
-
