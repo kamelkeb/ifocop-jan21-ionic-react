@@ -18,7 +18,7 @@ import { Context as UserContext } from "../features/currentUser";
 export const BasicForm = ({ signInHandler }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { sendResetPasswordEmail } = useContext(UserContext);
+  const { sendResetPasswordEmail, currentUserData } = useContext(UserContext);
 
   const [showResetPasswordAlert, setShowResetPasswordAlert] = useState(false);
   const [
@@ -33,6 +33,7 @@ export const BasicForm = ({ signInHandler }) => {
   const resetClickedHandler = () => {
     setShowResetPasswordAlert(true);
   };
+
   return (
     <form
       onSubmit={(e) => {
@@ -80,6 +81,11 @@ export const BasicForm = ({ signInHandler }) => {
             <IonButton type="submit" size="small">
               Sign In
             </IonButton>
+            {currentUserData.signInErrorMessage ? (
+              <IonText color="danger">
+                {currentUserData.signInErrorMessage}
+              </IonText>
+            ) : null}
           </IonCol>
         </IonRow>
       </IonGrid>
